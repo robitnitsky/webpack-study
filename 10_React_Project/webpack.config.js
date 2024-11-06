@@ -23,6 +23,7 @@ module.exports = {
         },
         port: 9000,
         open: true,
+        historyApiFallback: true,
     },
     module: {
         rules: [
@@ -49,11 +50,30 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                use: [MiniCssExtractPlugin.loader, 'css-loader', {
+                    loader: "postcss-loader",
+                    options: {
+                        postcssOptions: {
+                            plugins: [["postcss-preset-env", {}]],
+                        }
+                    }
+                }],
             },
             {
                 test: /\.s[ac]ss$/,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: {
+                                plugins: [["postcss-preset-env", {}]],
+                            }
+                        }
+                    },
+                    "sass-loader"
+                ],
             },
             {
                 test: /\.(png|jpeg|jpg|gif)$/,
