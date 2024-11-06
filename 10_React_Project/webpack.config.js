@@ -14,17 +14,39 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
             filename: 'index.html',
-        })
+        }),
+        new MiniCssExtractPlugin()
     ],
     devServer: {
         static: {
             directory: path.resolve(__dirname, 'dist'),
-            port: 9000,
-            open: true,
         },
+        port: 9000,
+        open: true,
     },
     module: {
         rules: [
+            {
+                test: /\.(js|jsx)$/,
+                include: path.resolve(__dirname, './src'),
+                exclude: path.resolve(__dirname, 'node_modules'),
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                [
+                                    "@babel/preset-env",
+                                    {
+                                        targets: "defaults",
+                                    }
+                                ],
+                                "@babel/preset-react",
+                            ],
+                        },
+                    }
+                ],
+            },
             {
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader'],
@@ -39,4 +61,9 @@ module.exports = {
             }
         ],
     },
-}
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
+    },
+};
